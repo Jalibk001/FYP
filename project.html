@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		
+		var as;
+		/*var days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+		*/var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+     $.ajax({
+       url: 'http://localhost:28017/mydb/things/?limit=0',
+       type: 'get',
+       dataType: 'jsonp',
+       jsonp: 'jsonp',       
+       success: function (data) 
+       {
+       		as = data["rows"];
+       		alert("Data Fetched Successfully From Database");
+       },
+        error: function (XMLHttpRequest, textStatus, errorThrown) 
+        {
+          alert("error Fetching data from Database");
+        }});
+        $('#Daily_sale').click(function()
+    	{
+    	
+        google.charts.load("current", {packages:["corechart","controls","calendar"]});
+        google.charts.setOnLoadCallback(function () 
+		        {
+		        	
+		          		var pie_data = new google.visualization.DataTable();
+		          		pie_data.addColumn("string","Item_name");
+		          		pie_data.addColumn("number","Quantity");
+		          		/*var my_data = new google.visualization.DataTable();
+		          		my_data.addColumn("string","Day");
+		          		my_data.addColumn("number","Sales");
+		          		*/
+		          		var x = document.getElementById('date_picker');
+    					var elem = "";
+						for (var i=0;i<x.length;i++)
+						{
+							elem+=x.elements[i].value;
+						}
+						form_date = elem.split("-");
+						form_year = parseInt(form_date[0]);
+						form_month = parseInt(form_date[1]);
+						form_date = parseInt(form_date[2]);
+
+		          		var itm= {};
+		          		var sz = as.length;
+		          		for (i=0;i<sz;i++)
+		          		{
+		          			/*var data_db = as[i];
+		          			var dt;
+		          			dt = data_db["Date"];
+		          			var spl = dt.split("-");
+		          			dt = spl[2]+"-"+spl[1]+"-"+spl[0];
+		          			var d = new Date(dt);
+		          			var dy = days[d.getDay()-1];*/
+		          			var data_db = as[i];
+		          			var dt;
+		          			dt = data_db["Date"];
+		          			db_date = dt.split("-");
+							db_year = parseInt(db_date[2]);
+							db_month = parseInt(db_date[1]);
+							db_date = parseInt(db_date[0]);
+		            		it=data_db["itemDescription"];
+		            		num = 1;
+		            		if(form_date==db_date&&form_month==db_month&&form_year==db_year){
+		            		if (itm.hasOwnProperty(it))
+		            		{
+		            			itm[it] = itm[it] + num; 
+		            		}
+		            		else
+		            		{
+		            			itm[it] = num;
+		            		}
+		            		}
+		            		
+		          		}
+		          		for (var key in itm)
+		          		{
+		          			if (itm.hasOwnProperty(key))
+		          			{
+		          				val = itm[key];          		
+		          				pie_data.addRows([[key,val]]);
+		          			}
+		          		}
+		          		var options = 
+		          		{
+		              		title: 'Daily Sales',
+		              		is3D: true,              
+		          		};
+		          		document.getElementById("pie").style.height=900+"px";
+        	document.getElementById("pie").style.width=500+"px";
+          				var chart = new google.visualization.PieChart(document.getElementById('pie'));
+          				chart.draw(pie_data, options);
+      			});
+	})
+        $('#montly_sale').click(function()
+		{
+        google.charts.load("current", {packages:["corechart","controls","calendar"]});
+        google.charts.setOnLoadCallback(function () 
+		        {
+		        	var my_data = new google.visualization.DataTable();
+		          		my_data.addColumn("string","Day");
+		          		my_data.addColumn("number","Sales");
+		          	var n_data = new google.visualization.DataTable();
+		          		n_data.addColumn("string","Date");
+		          		n_data.addColumn("number","Sales");
+		        	var dt_month={};
+		        	var dt_dt={};
+				document.getElementById("hist_month").style.height=100+"%";
+	        	document.getElementById("hist_month").style.width=50+"%";
+	    		var x = document.getElementById('month_select');
+	    		var elem = "";
+					for (var i=0;i<x.length;i++)
+					{
+						elem+=x.elements[i].value+":";
+					}
+					//kys = Object.keys(month);
+				var dt = elem.split(":");
+				var form_month = dt[0];
+				var form_year = dt[1];
+				form_month = parseInt(months.indexOf(form_month))+1;
+				for (i=0;i<as.length;i++)
+		        {
+		        	var n_dt;
+		        	var data_db = as[i];
+		        	n_dt = data_db["Date"];
+		        	var spl = n_dt.split("-");
+		        	n_dt = spl[2]+"-"+spl[1]+"-"+spl[0];
+		        	var d = new Date(n_dt);
+		        	d=d.toString();
+		        	console.log(d);
+		        	d=d.split(" ");
+		        	var dy = d[0];
+		        	var it=data_db["itemDescription"];
+		        	num = 1;
+		        	var dat = d[1]+" "+d[2];
+		        	if(form_month==parseInt(spl[1])&&form_year==spl[2])
+		        	{
+		        		if (dt_month.hasOwnProperty(dy))
+            			{
+            				dt_month[dy] = dt_month[dy] + num; 
+            			}
+            			else
+            			{		            				
+            				dt_month[dy] = num;	
+            			}
+		            	if (dt_dt.hasOwnProperty(dat))
+            			{
+            				dt_dt[dat] = dt_dt[dat] + num; 
+            			}
+            			else
+            			{		            				
+            				dt_dt[dat] = num;	
+            			}		
+		        	}
+		        }
+				for (var key in dt_month)
+      			{
+      				if(dt_month.hasOwnProperty(key))
+      				{
+
+      					var val = dt_month[key];
+      					 my_data.addRows([[key,val]]);
+      				}
+      			}
+      			for (var newkey in dt_dt)
+      			{
+      				if(dt_dt.hasOwnProperty(newkey))
+      				{
+
+      					var val = dt_dt[newkey];
+      					 n_data.addRows([[newkey,val]]);
+      				}
+      			}
+      			var options = 
+	          	{
+	          		curveType: 'function',
+	          		title: "Sales for selected Month",
+	          		hAxis:{title:"Days"},
+	          		vAxis:{title:"Sales"},
+	          	};
+	          	var options1 = 
+	          	{
+	          		curveType: 'function',
+	          		title: "Sales for selected Month",
+	          		hAxis:{title:"Date"},
+	          		vAxis:{title:"Sales"},
+	          	};
+      			var chart = new google.visualization.AreaChart(document.getElementById('hist_month'));
+
+      			chart.draw(my_data, options);
+      			var chart1 = new google.visualization.AreaChart(document.getElementById('hist_date'));
+      			chart1.draw(n_data, options1);
+		        });
+				
+		});
+    });
+        
+</script>
+</head>
+<body>
+
+<div id="daily Sales">
+	
+<p>
+	<strong>One Day Sales:</strong>
+</p>
+  <form id="date_picker" >
+  <label for="dt">Date:</label>
+  	<input type="date" id="dt">
+  </form>
+  
+  	<button id = "Daily_sale">
+  		submit
+  	</button>
+  
+  	
+</div>
+<div id="pie"></div>
+ 
+<h4>Monthly Sales</h4>  
+  <form id="month_select">
+ <b>Month:</b> 	<select name="month_st">
+  		<option value="Jan">January</option>
+  		<option value="Feb">February</option>
+  		<option value="Mar">March</option>
+  		<option value="Apr">April</option>
+  		<option value="May">May</option>
+  		<option value="Jun">June</option>
+  		<option value="Jul">July</option>
+  		<option value="Aug">August</option>
+  		<option value="Sep">September</option>
+  		<option value="Oct">October</option>
+  		<option value="Nov">November</option>
+  		<option value="Dec">December</option>
+  	</select>
+  <b>Enter Year:</b> 	 <input type="text">
+  </form>	
+	<button id="montly_sale">
+		Submit
+	</button>
+	<br>  
+<div id="hist_month"></div>
+<div id="hist_date"></div>  
+  	
+</body>
+</html>

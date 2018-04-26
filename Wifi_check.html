@@ -1,0 +1,70 @@
+<html>
+<head>
+<script type="text/javascript" src="loader.js">
+	
+</script>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		var as;
+		var sz;
+		$.ajax({
+	       url: 'http://localhost:28017/DB_Wifi/Custom/?limit=0',
+	       type: 'get',
+	       dataType: 'jsonp',
+	       jsonp: 'jsonp',       
+	       success: function (data) 
+	       {
+	       		as = data["rows"];
+	       		sz = data["total_rows"];
+	       },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) 
+	        {
+	          alert("error Fetching data from Database");
+	        }
+    	});
+        google.charts.load("current", {packages:["corechart","controls","calendar"]});
+        google.charts.setOnLoadCallback(function ()
+        {
+        	var pie_data = new google.visualization.DataTable();
+        	pie_data.addColumn("string","Mac Address");
+		    pie_data.addColumn("number","Count");
+		    var itm={};
+		    for(var i=0;i<sz;i++)
+		    {
+		    	var data_db = as[i];
+		    	var id = data_db['_id'];
+		    	var count = data_db['count'];
+		    	
+		    	if(count>5)
+		    	{
+		    		itm[id]=count;
+		    		console.log(itm[id]);
+		    	}
+		    }
+		    for (var key in itm)
+      		{
+      			if (itm.hasOwnProperty(key))
+      			{
+      				val = itm[key];          		
+      				pie_data.addRows([[key,val]]);
+      			}
+      		}
+      		var options = 
+      		{
+          		title: 'Customer Loyalty',
+          		is3D: true,              
+      		};
+      		document.getElementById("pie").style.height=100+"%";
+        	document.getElementById("pie").style.width=100+"%";
+      		var chart = new google.visualization.PieChart(document.getElementById('pie'));
+          	chart.draw(pie_data, options);
+        })
+	})
+</script>
+</head>
+<body>
+<div id="pie"></div>
+</body>
+</html>

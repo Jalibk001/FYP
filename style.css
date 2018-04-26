@@ -1,0 +1,107 @@
+
+body{background: #cccccc;
+}
+
+
+.navbar-inverse{
+	z-index: 1;
+}
+
+#side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding-top: 5%;
+  width: 20%;
+  height: 100%;
+  overflow: hidden;
+  background: #222;
+  color: #7f7f7f;
+}
+
+ul{
+	padding-top: 6%;
+}
+
+ul:hover{
+	color:white;
+	cursor: pointer;
+}
+
+.Sales1{
+	overflow: hidden;
+	position: absolute;
+	width: 30%;
+	height:40%; 
+	background: white;
+	margin-left: 28%;
+	
+}
+
+.Sales2{
+	width: 30%;
+	height:40%; 
+	background: white;
+	margin-left: 63%;
+	overflow: hidden;
+	position: absolute;
+	
+}
+
+.Sales3{
+	width: 65%;
+	height:40%; 
+	background: white;
+	margin-left:28%;
+	margin-top:21%;
+	overflow: hidden;
+	position: absolute;
+	
+}
+
+.association{
+	background: white;
+	height: 85%;
+	width: 65%;
+	margin-left: 28%;
+	overflow: hidden;
+	position: absolute;
+	display: none;
+}
+
+.center{
+	background: white;
+	height: 85%;
+	width: 30%;
+	margin-left: 28%;
+	overflow: hidden;
+	position: absolute;
+	display: none;
+}
+
+.cent{
+	background: white;
+	height: 85%;
+	width: 30%;
+	margin-left: 60%;
+	overflow: hidden;
+	position: absolute;
+	display: none;
+}
+
+#imag{
+	width:14%;
+	height:14%;
+	padding-right: 5%;
+}
+
+.logo{
+	width: 75%;
+	margin-top:70%;
+	margin-left: 10%;
+}
+
+img.logo:hover {
+  -webkit-filter: drop-shadow(0px 0px 8px rgba(0, 231, 255, 0.8));
+}

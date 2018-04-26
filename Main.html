@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+<script type="text/javascript" src="loader.js">
+	
+</script>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		var as;
+		var sz;
+		$.ajax({
+	       url: 'http://localhost:28017/DB_Wifi/Custom/?limit=0',
+	       type: 'get',
+	       dataType: 'jsonp',
+	       jsonp: 'jsonp',       
+	       success: function (data) 
+	       {
+	       		as = data["rows"];
+	       		sz = data["total_rows"];
+	       },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) 
+	        {
+	          alert("error Fetching data from Database");
+	        }
+    	});
+        google.charts.load("current", {packages:["corechart","controls","calendar"]});
+        google.charts.setOnLoadCallback(function ()
+        {
+        	var pie_data = new google.visualization.DataTable();
+        	pie_data.addColumn("string","Mac Address");
+		    pie_data.addColumn("number","Count");
+		    var pie_all = new google.visualization.DataTable();
+        	pie_all.addColumn("string","Mac Address");
+		    pie_all.addColumn("number","Count");
+		    var itm={};
+		    var itm_all={};
+		    for(var i=0;i<sz;i++)
+		    {
+		    	var data_db = as[i];
+		    	var id = data_db['_id'];
+		    	var count = data_db['count'];
+		    	itm_all[id]=count;
+		    	if(count>5)
+		    	{
+		    		itm[id]=count;
+		    	}
+		    }
+		    for (var key in itm)
+      		{
+      			if (itm.hasOwnProperty(key))
+      			{
+      				val = itm[key];          		
+      				pie_data.addRows([[key,val]]);
+      			}
+      		}
+      		for (var key in itm_all)
+      		{
+      			if (itm_all.hasOwnProperty(key))
+      			{
+      				val = itm_all[key];          		
+      				pie_all.addRows([[key,val]]);
+      			}
+      		}
+      		var options = 
+      		{
+          		title: 'Customer Loyalty',
+          		is3D: true,              
+      		};
+      		var chart = new google.visualization.PieChart(document.getElementById('loyality1'));
+          	chart.draw(pie_data, options);
+          	var chart_all = new google.visualization.PieChart(document.getElementById('loyality2'));
+          	chart_all.draw(pie_all, options);
+        })
+	})
+</script>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid ">
+   <div class="navbar-header">
+      <a class="navbar-brand" href="#">Data Analytics</a>
+    </div>
+  </div>
+</nav>
+
+<div id="side" class=" col-md-3">
+<div class="vertical-menu ">
+    <ul id="sale"><img src="sale.png" id="imag" />Sales</ul>
+    <ul id="association" onclick="myFunction()"><img src="association.png" id="imag" />Items Association</ul>
+    <ul id="loyalty" onclick="myFunction()"><img src="loyalty.png" id="imag" />Loyalty</ul>
+    <ul><img src="analysis.png" id="imag" />Analysis</ul>
+    </div>
+
+    <img class="logo" src="logo.png" />
+
+  </div>
+<div class="Sales1" id="sale1"></div>
+<div class="Sales2" id="sale2"></div>
+<div class="Sales3" id="sale3"></div>
+
+<div class="association" id="association1"></div>
+<div class="center" id="loyality1"></div>
+<div class="cent" id="loyality2"></div>
+
+<script>
+function myFunction() {
+	var association = document.getElementById("association");
+	var loyalty = document.getElementById("loyalty");
+    var sale = document.getElementById("sale");
+
+    var s1 = document.getElementById("sale1");
+	var s2 = document.getElementById("sale2");
+	var s3 = document.getElementById("sale3");
+	var x = document.getElementById("loyality1");
+	var y = document.getElementById("loyality2");
+    var a = document.getElementById("association1");
+     
+  
+	loyalty.onclick=function(){
+
+		if (x.style.display && y.style.display  === "none") 
+		{
+			x.style.display = "block";
+			y.style.display = "block";
+			a.style.display = "none";
+			s1.style.display = "none";
+			s2.style.display = "none";
+			s3.style.display = "none";
+		}  
+
+		else 
+		{
+			x.style.display = "none";
+			y.style.display = "none";
+		}
+	}
+
+
+	association.onclick=function(){
+
+		if (a.style.display  === "none") 
+		{
+			
+			a.style.display = "block";
+			s1.style.display = "none";
+			s2.style.display = "none";
+			s3.style.display = "none";
+			x.style.display = "none";
+			y.style.display = "none";
+		}  
+
+		else 
+		{
+			a.style.display = "none";
+		}
+	}
+
+
+      sale.onclick=function(){
+
+		
+			s1.style.display = "block";
+			s2.style.display = "block";
+			s3.style.display = "block";
+			x.style.display = "none";
+			y.style.display = "none";
+			a.style.display = "none";
+		}  
+
+
+}
+
+
+</script>
+
+</body>
+
+</html>
